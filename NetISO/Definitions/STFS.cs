@@ -367,7 +367,7 @@ public class STFS : IDisposable
           newByteSize = (ulong)((contentFileCount - 1) * BLOCKS_PER_FILE * BLOCK_SIZE);
 
           // Final partial-size file
-          var finalPartLen = sizeFactory($"{basePath}.data/Data{contentFileCount - 1:D4}");
+          var finalPartLen = sizeFactory(Path.Join($"{basePath}.data", $"Data{contentFileCount - 1:D4}"));
           if (finalPartLen == null)
           {
             Debug.WriteLine("Unable to find size of final SVOD data container");
@@ -531,7 +531,7 @@ public class STFS : IDisposable
         await activeStream.DisposeAsync();
 
       activeFile = block.File;
-      var container = $"{basePath}.data/Data{block.File:D4}";
+      var container = Path.Join($"{basePath}.data", $"Data{block.File:D4}");
 
       Debug.WriteLine($"Switching to container {container}");
       activeStream = streamFactory.Invoke(container);

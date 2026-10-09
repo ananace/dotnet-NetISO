@@ -1,0 +1,6 @@
+data/
+*.iso
+
+bin/
+obj/
+TestResults/

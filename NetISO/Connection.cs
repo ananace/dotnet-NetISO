@@ -1,6 +1,5 @@
 using System.Buffers.Binary;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Net.Sockets;
 using NetISO.Extensions;
 
@@ -42,15 +41,22 @@ public class Connection : IDisposable
         await HandleMessageAsync(msg);
       }
     }
+    catch (TimeoutException)
+    {
+      Console.WriteLine($"[{Endpoint}] Connection timeout");
+      Socket.Close();
+    }
     catch (Exception ex)
     {
       Console.WriteLine($"[{Endpoint}] Error in socket:");
       Console.WriteLine(ex);
       Socket.Close();
     }
-
-    Console.WriteLine($"[{Endpoint}] Disconnected");
-    OnDisconnect?.Invoke(this, EventArgs.Empty);
+    finally
+    {
+      Console.WriteLine($"[{Endpoint}] Disconnected");
+      OnDisconnect?.Invoke(this, EventArgs.Empty);
+    }
   }
 
   public async Task HandleMessageAsync(NetISO.Protocol.Message Message)
